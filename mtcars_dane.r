@@ -37,10 +37,19 @@ wczytaj_mtcars <- function(){
   test <- cars[(granica+1):nrow(cars), ]
   
   #wybieranie kolumn "ważnych"
-  tmp <- lm(qsec~. , data = cars)
-  tmp2 <- step(tmp, direction = "both", scope = list(upper=.~.+mpg+cyl+hp+drat+wt+vs+am+gear+carb), trace=0)
+  tmp <- lm(qsec~1 , data = cars)
+  forward <- step(tmp, direction = "forward", scope = list(upper=.~.+mpg+cyl+hp+drat+wt+vs+am+gear+carb), trace=0)
+  summary(forward)$r.squared#0.8523863
   
-  nazwyKolumn <- variable.names(tmp2)
+  tmp <- lm(qsec~mpg+cyl+hp+drat+wt+vs+am+gear+carb , data = cars)
+  backward <- step(tmp, direction = "backward", scope = list(upper=.~.+mpg+cyl+hp+drat+wt+vs+am+gear+carb), trace=0)
+  summary(backward)$r.squared#0.8453189
+  
+  tmp <- lm(qsec~. , data = cars)
+  both <- step(tmp, direction = "both", scope = list(upper=.~.+mpg+cyl+hp+drat+wt+vs+am+gear+carb), trace=0)
+  summary(both)$r.squared #0.8642928
+  
+  nazwyKolumn <- variable.names(both) #najlepszy both
   nazwyKolumn[1] <- "qsec" #poprawka nazwy 
   
   return (list("columns" = nazwyKolumn, "train" = train, "test"=test))

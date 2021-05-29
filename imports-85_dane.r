@@ -50,7 +50,9 @@ pacman::p_load(foreign)
 # cor_matrix=cor(imports.cor)
 # corrplot(cor_matrix)
 
-#funkcja
+rmse <- function(actual, predicted){
+  sqrt(mean((actual - predicted)^2))
+}
 
 wczytaj_imports_85 <- function(){
   imports = read.csv("imports-85.csv")
@@ -92,7 +94,33 @@ wczytaj_imports_85 <- function(){
   #hist(imports$price, breaks = 50)#wybieram mediane bo nie jest rozk?ad normalny
   imports$price[which(is.na(imports$price))] = median(imports$price, na.rm = T)
   
-  print("Wczytano imports i poprawiono dane")
   
-  return(imports)
+  imports = as.data.frame(sapply(imports, as.numeric))#zmiana na numeryczne i "ramke"
+  
+  granica <- floor((nrow(imports)/4)*3)
+  train <- imports[1:granica, ]
+  test <- imports[(granica+1):nrow(imports), ]
+  
+  #eliminacja zmiennych
+  tmp <- lm(horsepower~1, data = train)
+  forward = step(tmp, direction = "forward", scope = list(upper=.~.+ symboling + `normalized.losses` + make + `fuel.type` + aspiration + `num.of.doors` + `body.style` + `drive.wheels` + `engine.location` + `wheel.base` + length + width + height + `curb.weight` + `engine.type` + `num.of.cylinders` + `engine.size` + `fuel.system` + bore + stroke + `compression.ratio` + price + `peak.rpm` + `city.mpg` + `highway.mpg`), trace=0)
+  summary(forward)$r.squared#0.9439251
+  
+  tmp <- lm(horsepower~symboling+`normalized.losses`+make+`fuel.type`+aspiration+`num.of.doors`+`body.style`+`drive.wheels`+`engine.location`+`wheel.base`+length+width+height+`curb.weight`+`engine.type`+`num.of.cylinders`+`engine.size`+`fuel.system`+bore+stroke+`compression.ratio`+price+`peak.rpm`+`city.mpg`+`highway.mpg`, data = train)
+  backward = step(tmp, direction = "backward", scope = list(upper=.~.+ symboling + `normalized.losses` + make + `fuel.type` + aspiration + `num.of.doors` + `body.style` + `drive.wheels` + `engine.location` + `wheel.base` + length + width + height + `curb.weight` + `engine.type` + `num.of.cylinders` + `engine.size` + `fuel.system` + bore + stroke + `compression.ratio` + price + `peak.rpm` + `city.mpg` + `highway.mpg`), trace=0)
+  summary(backward)$r.squared#0.9311484
+  
+  tmp <- lm(horsepower~. , data = imports)
+  both <- step(tmp, direction = "both", scope = list(upper=.~.+ symboling + `normalized.losses` + make + `fuel.type` + aspiration + `num.of.doors` + `body.style` + `drive.wheels` + `engine.location` + `wheel.base` + length + width + height + `curb.weight` + `engine.type` + `num.of.cylinders` + `engine.size` + `fuel.system` + bore + stroke + `compression.ratio` + price + `peak.rpm` + `city.mpg` + `highway.mpg`), trace=0)
+  summary(both)$r.squared#0.9431018
+  
+  nazwyKolumn <- variable.names(forward) #najlepszy forward - najwyższy r.squared
+  nazwyKolumn[1] <- "horsepower" #poprawka nazwy 
+  
+  return(list("columns" = nazwyKolumn, "train" = train, "test"=test))
+}
+
+svm_imports <- function(kolumny, dane, kernel = "radial"){
+  model = svm(horsepower~., data=dane[,kolumny], kernel = kernel, type="nu-regression")
+  return (model)
 }

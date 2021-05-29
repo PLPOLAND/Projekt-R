@@ -1,7 +1,5 @@
-source("mtcars_naprawa.r")
-source("machine_naprawa.r")
-source("imports-85_naprawa.r")
+source("mtcars__dane.r")
+source("machine_dane.r")
+source("imports-85_dane.r")
 
-cars = wczytaj_mtcars()
-machine = wczytaj_machine()
-imports = wczytaj_imports_85()
+#zobacz jak w SVMRegresja.r
