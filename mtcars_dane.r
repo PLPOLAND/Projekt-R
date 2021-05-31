@@ -7,7 +7,7 @@ pacman::p_load(foreign)
 # pacman::p_load(corrplot)
 # cars.cor <- sapply(cars,function(x) as.numeric(x))
 # cor_matrix=cor(cars.cor)
-# corrplot(cor_matrix)
+# corrplot(cor_matrix, method = number)
 
 
 
@@ -48,6 +48,11 @@ wczytaj_mtcars <- function(){
   tmp <- lm(qsec~. , data = cars)
   both <- step(tmp, direction = "both", scope = list(upper=.~.+mpg+cyl+hp+drat+wt+vs+am+gear+carb), trace=0)
   summary(both)$r.squared #0.8642928
+  
+  # cat("forward r.squared = ", summary(forward)$r.squared)
+  # cat("backward r.squared = ", summary(backward)$r.squared)
+  # cat("both r.squared = ", summary(both)$r.squared)
+  # 
   
   nazwyKolumn <- variable.names(both) #najlepszy both
   nazwyKolumn[1] <- "qsec" #poprawka nazwy 
