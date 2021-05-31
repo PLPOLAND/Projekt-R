@@ -50,9 +50,9 @@ wczytaj_machine <- function(){
   
   machine = as.data.frame(sapply(machine, as.numeric))#zmiana na numeryczne i "ramke"
   
-  granica <- floor((nrow(machine)/4)*3)
-  train <- machine[1:granica, ]
-  test <- machine[(granica+1):nrow(machine), ]
+  indexy <- sample(nrow(machine), size = trunc(0.25* nrow(machine)) )
+  train <- machine[indexy, ]
+  test <- machine[-indexy, ]
   
   tmp <- lm(PRP~1 , data = machine)
   forward <- step(tmp, direction = "forward", scope = list(upper=.~.+`vendor name`+MYCT+MMIN+MMAX+CACH+CHMIN+CHMAX), trace=0)

@@ -32,9 +32,9 @@ wczytaj_mtcars <- function(){
   cars = mtcars
   cars = as.data.frame(sapply(cars, as.numeric))#zmiana na numeryczne i "ramke"
   
-  granica <- floor((nrow(cars)/4)*3)
-  train <- cars[1:granica, ]
-  test <- cars[(granica+1):nrow(cars), ]
+  indexy <- sample(nrow(cars), size = trunc(0.25* nrow(cars)) )
+  train <- cars[indexy, ]
+  test <- cars[-indexy, ]
   
   #wybieranie kolumn "ważnych"
   tmp <- lm(qsec~1 , data = cars)

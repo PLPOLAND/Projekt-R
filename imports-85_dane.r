@@ -93,13 +93,13 @@ wczytaj_imports_85 <- function(){
   
   #hist(imports$price, breaks = 50)#wybieram mediane bo nie jest rozk?ad normalny
   imports$price[which(is.na(imports$price))] = median(imports$price, na.rm = T)
-  
+  set.seed(123)
   
   imports = as.data.frame(sapply(imports, as.numeric))#zmiana na numeryczne i "ramke"
   
-  granica <- floor((nrow(imports)/4)*3)
-  train <- imports[1:granica, ]
-  test <- imports[(granica+1):nrow(imports), ]
+  indexy <- sample(nrow(imports), size = trunc(0.25* nrow(imports)) )
+  train <- imports[indexy, ]
+  test <- imports[-indexy, ]
   
   #eliminacja zmiennych
   tmp <- lm(horsepower~1, data = train)
