@@ -22,7 +22,7 @@ pacman::p_load(foreign)
 # pacman::p_load(corrplot)
 # machine.cor <- sapply(machine,function(x) as.numeric(x))
 # cor_matrix=cor(machine.cor)
-# corrplot(cor_matrix)
+# corrplot.mixed(cor_matrix)
 
 rmse <- function(actual, predicted){
   sqrt(mean((actual - predicted)^2))

@@ -56,15 +56,15 @@ wczytaj_imports_85 <- function(){
   #eliminacja zmiennych
   tmp <- lm(symboling~1, data = train)
   forward = step(tmp, direction = "forward", scope = list(upper=.~.+ horsepower + `normalized.losses` + make + `fuel.type` + aspiration + `num.of.doors` + `body.style` + `drive.wheels` + `engine.location` + `wheel.base` + length + width + height + `curb.weight` + `engine.type` + `num.of.cylinders` + `engine.size` + `fuel.system` + bore + stroke + `compression.ratio` + price + `peak.rpm` + `city.mpg` + `highway.mpg`), trace=0)
-  summary(forward)$r.squared#0.9439251
+  summary(forward)$r.squared#0.7512137
   
   tmp <- lm(symboling~horsepower+`normalized.losses`+make+`fuel.type`+aspiration+`num.of.doors`+`body.style`+`drive.wheels`+`engine.location`+`wheel.base`+length+width+height+`curb.weight`+`engine.type`+`num.of.cylinders`+`engine.size`+`fuel.system`+bore+stroke+`compression.ratio`+price+`peak.rpm`+`city.mpg`+`highway.mpg`, data = train)
   backward = step(tmp, direction = "backward", scope = list(upper=.~.+ horsepower + `normalized.losses` + make + `fuel.type` + aspiration + `num.of.doors` + `body.style` + `drive.wheels` + `engine.location` + `wheel.base` + length + width + height + `curb.weight` + `engine.type` + `num.of.cylinders` + `engine.size` + `fuel.system` + bore + stroke + `compression.ratio` + price + `peak.rpm` + `city.mpg` + `highway.mpg`), trace=0)
-  summary(backward)$r.squared#0.9311484
+  summary(backward)$r.squared#0.8202633
   
   tmp <- lm(symboling~. , data = imports)
   both <- step(tmp, direction = "both", scope = list(upper=.~.+ horsepower + `normalized.losses` + make + `fuel.type` + aspiration + `num.of.doors` + `body.style` + `drive.wheels` + `engine.location` + `wheel.base` + length + width + height + `curb.weight` + `engine.type` + `num.of.cylinders` + `engine.size` + `fuel.system` + bore + stroke + `compression.ratio` + price + `peak.rpm` + `city.mpg` + `highway.mpg`), trace=0)
-  summary(both)$r.squared#0.9431018
+  summary(both)$r.squared#0.7014353
   
   nazwyKolumn <- variable.names(backward) #najlepszy forward - najwyższy r.squared
   nazwyKolumn[1] <- "symboling" #poprawka nazwy 
@@ -76,3 +76,8 @@ svm_imports <- function(kolumny, dane, kernel = "radial"){
   model = svm(symboling~., data=dane[,kolumny], kernel = kernel, type="nu-regression")
   return (model)
 }
+
+# pacman::p_load(corrplot)
+# imports.cor <- sapply(imports,function(x) as.numeric(x))
+# cor_matrix=cor(imports.cor)
+# corrplot.mixed(cor_matrix)
