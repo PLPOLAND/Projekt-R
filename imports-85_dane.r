@@ -54,25 +54,25 @@ wczytaj_imports_85 <- function(){
   test <- imports[-indexy, ]
   
   #eliminacja zmiennych
-  tmp <- lm(horsepower~1, data = train)
-  forward = step(tmp, direction = "forward", scope = list(upper=.~.+ symboling + `normalized.losses` + make + `fuel.type` + aspiration + `num.of.doors` + `body.style` + `drive.wheels` + `engine.location` + `wheel.base` + length + width + height + `curb.weight` + `engine.type` + `num.of.cylinders` + `engine.size` + `fuel.system` + bore + stroke + `compression.ratio` + price + `peak.rpm` + `city.mpg` + `highway.mpg`), trace=0)
+  tmp <- lm(symboling~1, data = train)
+  forward = step(tmp, direction = "forward", scope = list(upper=.~.+ horsepower + `normalized.losses` + make + `fuel.type` + aspiration + `num.of.doors` + `body.style` + `drive.wheels` + `engine.location` + `wheel.base` + length + width + height + `curb.weight` + `engine.type` + `num.of.cylinders` + `engine.size` + `fuel.system` + bore + stroke + `compression.ratio` + price + `peak.rpm` + `city.mpg` + `highway.mpg`), trace=0)
   summary(forward)$r.squared#0.9439251
   
-  tmp <- lm(horsepower~symboling+`normalized.losses`+make+`fuel.type`+aspiration+`num.of.doors`+`body.style`+`drive.wheels`+`engine.location`+`wheel.base`+length+width+height+`curb.weight`+`engine.type`+`num.of.cylinders`+`engine.size`+`fuel.system`+bore+stroke+`compression.ratio`+price+`peak.rpm`+`city.mpg`+`highway.mpg`, data = train)
-  backward = step(tmp, direction = "backward", scope = list(upper=.~.+ symboling + `normalized.losses` + make + `fuel.type` + aspiration + `num.of.doors` + `body.style` + `drive.wheels` + `engine.location` + `wheel.base` + length + width + height + `curb.weight` + `engine.type` + `num.of.cylinders` + `engine.size` + `fuel.system` + bore + stroke + `compression.ratio` + price + `peak.rpm` + `city.mpg` + `highway.mpg`), trace=0)
+  tmp <- lm(symboling~horsepower+`normalized.losses`+make+`fuel.type`+aspiration+`num.of.doors`+`body.style`+`drive.wheels`+`engine.location`+`wheel.base`+length+width+height+`curb.weight`+`engine.type`+`num.of.cylinders`+`engine.size`+`fuel.system`+bore+stroke+`compression.ratio`+price+`peak.rpm`+`city.mpg`+`highway.mpg`, data = train)
+  backward = step(tmp, direction = "backward", scope = list(upper=.~.+ horsepower + `normalized.losses` + make + `fuel.type` + aspiration + `num.of.doors` + `body.style` + `drive.wheels` + `engine.location` + `wheel.base` + length + width + height + `curb.weight` + `engine.type` + `num.of.cylinders` + `engine.size` + `fuel.system` + bore + stroke + `compression.ratio` + price + `peak.rpm` + `city.mpg` + `highway.mpg`), trace=0)
   summary(backward)$r.squared#0.9311484
   
-  tmp <- lm(horsepower~. , data = imports)
-  both <- step(tmp, direction = "both", scope = list(upper=.~.+ symboling + `normalized.losses` + make + `fuel.type` + aspiration + `num.of.doors` + `body.style` + `drive.wheels` + `engine.location` + `wheel.base` + length + width + height + `curb.weight` + `engine.type` + `num.of.cylinders` + `engine.size` + `fuel.system` + bore + stroke + `compression.ratio` + price + `peak.rpm` + `city.mpg` + `highway.mpg`), trace=0)
+  tmp <- lm(symboling~. , data = imports)
+  both <- step(tmp, direction = "both", scope = list(upper=.~.+ horsepower + `normalized.losses` + make + `fuel.type` + aspiration + `num.of.doors` + `body.style` + `drive.wheels` + `engine.location` + `wheel.base` + length + width + height + `curb.weight` + `engine.type` + `num.of.cylinders` + `engine.size` + `fuel.system` + bore + stroke + `compression.ratio` + price + `peak.rpm` + `city.mpg` + `highway.mpg`), trace=0)
   summary(both)$r.squared#0.9431018
   
-  nazwyKolumn <- variable.names(forward) #najlepszy forward - najwyższy r.squared
-  nazwyKolumn[1] <- "horsepower" #poprawka nazwy 
+  nazwyKolumn <- variable.names(backward) #najlepszy forward - najwyższy r.squared
+  nazwyKolumn[1] <- "symboling" #poprawka nazwy 
   
   return(list("columns" = nazwyKolumn, "train" = train, "test"=test))
 }
 
 svm_imports <- function(kolumny, dane, kernel = "radial"){
-  model = svm(horsepower~., data=dane[,kolumny], kernel = kernel, type="nu-regression")
+  model = svm(symboling~., data=dane[,kolumny], kernel = kernel, type="nu-regression")
   return (model)
 }

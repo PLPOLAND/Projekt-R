@@ -34,24 +34,24 @@ svm_regression_imports <- function(){
   imports_test = wczytaj_imports_85()$test
   imports_columns = wczytaj_imports_85()$columns
 
-  idx = which(imports_columns == "engine.location")
-  imports_columns = imports_columns[ -idx] #usuwam dodatkowo engine,location ponieważ svm "krzyczy" że mu nie pasuje - brak danych o wartości innej niż 1
+  # idx = which(imports_columns == "engine.location")
+  # imports_columns = imports_columns[ -idx] #usuwam dodatkowo engine,location ponieważ svm "krzyczy" że mu nie pasuje - brak danych o wartości innej niż 1
 
   imports_svm_radial = svm_imports(imports_columns, imports_test)
   przewidziane = predict(imports_svm_radial,imports_test)
-  cat("\nRMSE dla kernel 'radial' = ", rmse(imports_test$horsepower,przewidziane))
+  cat("\nRMSE dla kernel 'radial' = ", rmse(imports_test$symboling,przewidziane))
 
   imports_svm_polynomial = svm_imports(imports_columns, imports_test, kernel = "polynomial")
   przewidziane2 = predict(imports_svm_polynomial,imports_test)
-  cat("\nRMSE dla kernel 'polynomial' = ", rmse(imports_test$horsepower,przewidziane2))
+  cat("\nRMSE dla kernel 'polynomial' = ", rmse(imports_test$symboling,przewidziane2))
 
   imports_svm_sigmoid = svm_imports(imports_columns, imports_test, kernel = "sigmoid")
   przewidziane3 = predict(imports_svm_sigmoid,imports_test)
-  cat("\nRMSE dla kernel 'sigmoid' = ", rmse(imports_test$horsepower,przewidziane3))
+  cat("\nRMSE dla kernel 'sigmoid' = ", rmse(imports_test$symboling,przewidziane3))
 
   imports_svm_linear = svm_imports(imports_columns, imports_test, kernel = "linear")
   przewidziane4 = predict(imports_svm_linear,imports_test)
-  cat("\nRMSE dla kernel 'linear' = ", rmse(imports_test$horsepower,przewidziane4))
+  cat("\nRMSE dla kernel 'linear' = ", rmse(imports_test$symboling,przewidziane4))
 }
 
 svm_regression_machine <- function(){ 
