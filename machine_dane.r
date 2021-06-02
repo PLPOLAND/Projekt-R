@@ -27,6 +27,9 @@ pacman::p_load(foreign)
 rmse <- function(actual, predicted){
   sqrt(mean((actual - predicted)^2))
 }
+mse <- function(actual, predicted){
+  mean((actual - predicted)^2)
+}
 wczytaj_machine <- function(){
   machine = read.table("machine.data", sep=",")
   names(machine)[1] <- "vendor name"

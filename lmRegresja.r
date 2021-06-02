@@ -11,6 +11,7 @@ lm_regression_mtCars <- function(){
   model = lm(qsec~., data=cars_train[,cars_columns])
   predicted = predict(model, cars_test)
   cat("\nRMSE dla LM = ", rmse(cars_test$qsec,predicted))
+  cat("\nMSE dla LM = ", mse(cars_test$qsec,predicted))
   
 }
 
@@ -24,6 +25,7 @@ lm_regression_imports <- function(){
   model = lm(symboling~., data=imports_train[,imports_columns])
   predicted = predict(model, imports_test)
   cat("\nRMSE dla LM = ", rmse(imports_test$symboling,predicted))
+  cat("\nMSE dla LM = ", mse(imports_test$symboling,predicted))
   
 }
 
@@ -37,5 +39,21 @@ lm_regression_machine <- function(){
   model = lm(PRP~., data=machine_train[,machine_columns])
   predicted = predict(model, machine_test)
   cat("\nRMSE dla LM = ", rmse(machine_test$PRP,predicted))
+  cat("\nMSE dla LM = ", mse(machine_test$PRP,predicted))
   
+}
+
+lm_regression_energy <-  function(){
+  cat("\n\n\n LM ENERGY \n")
+  
+  
+  
+  energy_train = wczytaj_energy_efficiency()$train
+  energy_test = wczytaj_energy_efficiency()$test
+  energy_columns = wczytaj_energy_efficiency()$columns
+  
+  model = lm(HeatingLoad~., data=energy_train[,energy_columns])
+  predicted = predict(model, energy_test)
+  cat("\nRMSE dla LM = ", rmse(energy_test$HeatingLoad,predicted))
+  cat("\nMSE dla LM = ", mse(energy_test$HeatingLoad,predicted))
 }
