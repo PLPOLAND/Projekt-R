@@ -24,7 +24,8 @@ wczytaj_energy_efficiency <- function(){
   # cor_matrix=cor(energy.cor)
   # corrplot.mixed(cor_matrix)
   
-  
+  idx = which(colnames(energy) == "CoolingLoad")
+  energy = energy[,-idx] #usuwanie zmiennej CoolingLoad ponieważ jest to inna zmienna "przewidywana" w danych co zaburzy nasze przewidywania HeatingLoad
   set.seed(123)
   
   energy = as.data.frame(sapply(energy, as.numeric))#zmiana na numeryczne i "ramke"
@@ -44,11 +45,12 @@ wczytaj_energy_efficiency <- function(){
   
   tmp <- lm(HeatingLoad~. , data = energy)
   both <- step(tmp, direction = "both", scope = list(upper=.~.+RelativeCompactness+SurfaceArea+WallArea+RoofArea+OverallHeight+Orientation+GlazingArea+GlazingAreaDistribution), trace=0)
-  summary(both)$r.squared #0.9690846
+  summary(both)$r.squared #0.9161955
   
   
-  nazwyKolumn <- variable.names(both) #najlepszy forward - najwyższy r.squared
+  nazwyKolumn <- variable.names(both) #Wszystkie wybrały ten sam model, wybieram "both"
   nazwyKolumn[1] <- "HeatingLoad" #poprawka nazwy 
+  
   
   return(list("columns" = nazwyKolumn, "train" = train, "test"=test))
 
