@@ -52,7 +52,7 @@ wczytaj_machine <- function(){
   
   
   machine = as.data.frame(sapply(machine, as.numeric))#zmiana na numeryczne i "ramke"
-  
+  set.seed(123)
   indexy <- sample(nrow(machine), size = trunc(0.25* nrow(machine)) )
   train <- machine[indexy, ]
   test <- machine[-indexy, ]

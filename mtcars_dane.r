@@ -31,7 +31,7 @@ rmse <- function(actual, predicted){
 wczytaj_mtcars <- function(){
   cars = mtcars
   cars = as.data.frame(sapply(cars, as.numeric))#zmiana na numeryczne i "ramke"
-  
+  set.seed(123)
   indexy <- sample(nrow(cars), size = trunc(0.25* nrow(cars)) )
   train <- cars[indexy, ]
   test <- cars[-indexy, ]
